@@ -1,0 +1,18 @@
+.container {
+  flex: 1;
+  overflow-y: auto;
+  height: auto;
+}
+@media (max-width: 959px) {
+  /* below md */
+  .container {
+    height: calc(100vh - 64px);
+  }
+}
+.inner {
+  padding: 24px;
+}
+.empty {
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.56);
+}

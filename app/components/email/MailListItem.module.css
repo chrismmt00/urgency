@@ -1,0 +1,49 @@
+/* 4 columns: checkbox | star | flex text | timer */
+.row {
+  display: grid;
+  grid-template-columns: 36px 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.text {
+  min-width: 0; /* allow text to truncate */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subjectLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.timer {
+  justify-self: end;
+  white-space: nowrap; /* keeps the chip on one line */
+}
+.listScroll {
+  overflow-y: auto;
+  max-height: none;
+  height: calc(100vh - 64px - 40px); /* appbar - bulk row */
+}
+@media (min-width: 960px) {
+  .listScroll {
+    height: calc(100vh - 64px - 40px);
+  }
+}
