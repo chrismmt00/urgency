@@ -53,7 +53,7 @@ export default function TopBar({ onOpenSidebar }) {
           <div className={styles.brandWrap}>
             <MailOutlineIcon className={styles.logoIcon} />
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              MailTickr
+              URGENCY
             </Typography>
           </div>
         </div>

@@ -11,7 +11,7 @@ export default function NavBar() {
         >
           <MailOutlineIcon />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            MailTickr
+            Urgency
           </Typography>
         </Box>
         <Button href="/inbox" variant="outlined">
