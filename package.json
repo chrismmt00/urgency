@@ -17,7 +17,7 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
     "@mui/material-nextjs": "^7.3.3",
-    "argon2": "^0.40.3",
+    "@node-rs/argon2": "^2.0.2",
     "clsx": "^2.1.1",
     "cookie": "^0.6.0",
     "date-fns": "^3.6.0",
