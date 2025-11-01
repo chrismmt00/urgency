@@ -1,0 +1,129 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--topbar-bg);
+  color: var(--topbar-fg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 64px;
+  margin: 0 auto;
+  width: min(1100px, 100%);
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+}
+
+.brandWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.logoIcon {
+  color: var(--brand-accent);
+}
+
+.brand {
+  letter-spacing: 0.01em;
+}
+
+.links {
+  display: flex;
+  gap: 20px;
+  font-size: 0.95rem;
+}
+
+.link {
+  opacity: 0.72;
+  transition: opacity 0.2s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  opacity: 1;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.iconBtn:hover,
+.iconBtn:focus-visible {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.secondaryCta {
+  border-color: var(--border) !important;
+  color: var(--topbar-fg) !important;
+  font-weight: 600 !important;
+}
+
+.secondaryCta:hover,
+.secondaryCta:focus-visible {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+:global(:root[data-theme="dark"]) .secondaryCta:hover,
+:global(:root[data-theme="dark"]) .secondaryCta:focus-visible {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.primaryCta {
+  font-weight: 600 !important;
+}
+
+@media (max-width: 900px) {
+  .inner {
+    width: 100%;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .links {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .secondaryCta {
+    display: none !important;
+  }
+
+  .actions {
+    gap: 10px;
+  }
+
+  .iconBtn {
+    width: 32px;
+    height: 32px;
+  }
+}

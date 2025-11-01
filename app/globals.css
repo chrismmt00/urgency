@@ -1,15 +1,81 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --drawer-width: 240px;
+  --list-width: 520px;
 }
 
+/* ========== Color tokens (light default) ========== */
+:root {
+  /* App-wide base */
+  --background: #dadada;
+  --foreground: #171717;
+
+  /* Surfaces / borders */
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.12);
+
+  /* Top bar + search */
+  --topbar-bg: var(--surface);
+  --topbar-fg: var(--foreground);
+  --search-bg: rgba(0, 0, 0, 0.06);
+  --search-border: rgba(0, 0, 0, 0.08);
+
+  /* Brand accent */
+  --brand-accent: #4b9eff;
+
+  /* Success/Warning/Error chips (optional) */
+  --chip-success: #4caf50;
+  --chip-warning: #ffc107;
+  --chip-error: #d84c4c;
+}
+
+/* ========== Dark theme override when toggled ==========
+   TopBar sets: document.documentElement.setAttribute('data-theme','dark')
+   This takes precedence over prefers-color-scheme.
+========================================================= */
+:root[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --surface: #1e1f22;
+  --border: rgba(255, 255, 255, 0.14);
+
+  --topbar-bg: var(--surface);
+  --topbar-fg: var(--foreground);
+  --search-bg: rgba(255, 255, 255, 0.1);
+  --search-border: rgba(255, 255, 255, 0.18);
+
+  --brand-accent: #82b6ff;
+
+  --chip-success: #7bd389;
+  --chip-warning: #ffd666;
+  --chip-error: #ff7b7b;
+}
+
+/* ========== System preference default ==========
+   Only applies if you did NOT explicitly toggle.
+   (No [data-theme] attribute present.) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --surface: #1e1f22;
+    --border: rgba(255, 255, 255, 0.14);
+
+    --topbar-bg: var(--surface);
+    --topbar-fg: var(--foreground);
+    --search-bg: rgba(255, 255, 255, 0.1);
+    --search-border: rgba(255, 255, 255, 0.18);
+
+    --brand-accent: #82b6ff;
+
+    --chip-success: #7bd389;
+    --chip-warning: #ffd666;
+    --chip-error: #ff7b7b;
   }
 }
 
+/* ========== Base resets ========== */
 html,
 body {
   max-width: 100vw;
@@ -29,12 +95,12 @@ body {
   padding: 0;
   margin: 0;
 }
-
 a {
   color: inherit;
   text-decoration: none;
 }
 
+/* Let browsers know we support dark UI */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

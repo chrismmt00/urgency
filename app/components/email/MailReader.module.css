@@ -1,18 +1,149 @@
+/* Root: fills its column and scrolls internally */
 .container {
-  flex: 1;
-  overflow-y: auto;
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  /* Fill available space in flex parent (reader column) */
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0; /* allow width to shrink within flex/grid */
+  height: 100%;
+  min-height: 0; /* allow inner to shrink */
+  overflow-y: auto; /* MailReader scrolls, not the whole page */
+  background: var(--surface-subtle, var(--surface));
+  -webkit-overflow-scrolling: touch;
 }
+
+/* Better viewport unit on mobile, avoids browser bars issues */
 @media (max-width: 959px) {
-  /* below md */
   .container {
-    height: calc(100vh - 64px);
+    /* Keep sizing controlled by parent layout; maintain full height of content area */
+    height: 100%;
+    /* Scroll within the reader on mobile to avoid parent clipping */
+    overflow-y: auto;
   }
 }
+
+/* Content width/spacing */
 .inner {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0; /* allow children to size/scroll */
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 20px 20px 32px;
+  color: var(--foreground);
 }
+
+.subject {
+  font-weight: 800 !important;
+  margin: 2px 0 6px;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 10px;
+}
+
+.fromBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.avatar {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.fromText {
+  min-width: 0;
+}
+.fromLine {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+.fromName {
+  font-weight: 600;
+}
+.fromEmail {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.date {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.toolsRight {
+  white-space: nowrap;
+}
+
+/* Mobile: let meta wrap so chip doesn't squeeze content */
+@media (max-width: 600px) {
+  .metaRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px 12px;
+  }
+  .toolsRight {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.divider {
+  margin: 12px 0 16px;
+  border-color: var(--border);
+}
+
+.message {
+  background: var(--surface);
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 16px 20px !important;
+  line-height: 1.6;
+  width: 100%;
+  margin-top: 15px;
+  position: relative;
+  z-index: 0;
+  flex: 0 0 auto;
+}
+
+.bodyText {
+  white-space: pre-wrap;
+  text-align: left;
+  color: var(--foreground);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex: 0 0 auto;
+}
+
 .empty {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
   padding: 24px;
-  color: rgba(0, 0, 0, 0.56);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .inner {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
 }

@@ -30,8 +30,9 @@ export default function MailList() {
     });
   }, [emails, folder, query]);
 
-  const toggleAll = (checked) =>
+  const toggleAll = (checked) => {
     setSelectedIds(checked ? new Set(filtered.map((m) => m.id)) : new Set());
+  };
 
   const markRead = () => {
     setEmails((prev) =>
@@ -52,7 +53,7 @@ export default function MailList() {
     selectedIds.size > 0 && selectedIds.size < filtered.length;
 
   return (
-    <div className={styles.pane}>
+    <div className={styles.root}>
       <div className={styles.bulk}>
         <Checkbox
           size="small"
@@ -61,39 +62,33 @@ export default function MailList() {
           onChange={(e) => toggleAll(e.target.checked)}
         />
         <Tooltip title="Mark as read">
-          <span>
-            <IconButton
-              size="small"
-              disabled={selectedIds.size === 0}
-              onClick={markRead}
-            >
-              <DraftsIcon fontSize="small" />
-            </IconButton>
-          </span>
+          <IconButton
+            size="small"
+            disabled={selectedIds.size === 0}
+            onClick={markRead}
+          >
+            <DraftsIcon fontSize="small" />
+          </IconButton>
         </Tooltip>
         <Tooltip title="Archive">
-          <span>
-            <IconButton size="small" disabled={selectedIds.size === 0}>
-              <ArchiveIcon fontSize="small" />
-            </IconButton>
-          </span>
+          <IconButton size="small" disabled={selectedIds.size === 0}>
+            <ArchiveIcon fontSize="small" />
+          </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
-          <span>
-            <IconButton
-              size="small"
-              disabled={selectedIds.size === 0}
-              onClick={remove}
-            >
-              <DeleteOutlineIcon fontSize="small" />
-            </IconButton>
-          </span>
+          <IconButton
+            size="small"
+            disabled={selectedIds.size === 0}
+            onClick={remove}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
         </Tooltip>
       </div>
 
       <Divider />
 
-      <List dense disablePadding className={styles.listScroll}>
+      <List dense disablePadding className={styles.scroll}>
         {filtered.map((mail) => (
           <MailListItem key={mail.id} mail={mail} />
         ))}

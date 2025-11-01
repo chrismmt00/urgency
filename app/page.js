@@ -1,125 +1,127 @@
 "use client";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Button from "@mui/material/Button";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import NavBar from "./components/NavBar";
+import styles from "./page.module.css";
+import HeroTimer from "./components/HeroTimer";
+
+const FEATURES = [
+  {
+    icon: AccessTimeIcon,
+    title: "Live countdowns",
+    text: "Each email gets its own ticking timer based on your preset (24/48/72/custom).",
+  },
+  {
+    icon: ColorLensIcon,
+    title: "Color clarity",
+    text: "Green to yellow to red - your brain always knows what to tackle first.",
+  },
+  {
+    icon: CheckCircleIcon,
+    title: "Gentle nudges",
+    text: "Optional sounds, haptics, and push reminders before time runs out.",
+  },
+];
 
 export default function Home() {
   return (
     <>
       <NavBar />
-      {/* Hero */}
-      <Box
-        sx={{
-          py: 12,
-          background: "linear-gradient(180deg, #ffffff 0, #F5F6F7 100%)",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography
-                variant="h2"
-                sx={{ fontWeight: 800, lineHeight: 1.1 }}
-              >
-                Beat your inbox with{" "}
-                <span style={{ color: "#D84C4C" }}>color-coded</span> timers.
-              </Typography>
-              <Typography sx={{ mt: 2, color: "text.secondary" }}>
-                MailTickr starts a countdown on each new email and gently nudges
-                you: green → yellow → red. For brains that love visual cues.
-              </Typography>
-              <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
-                <Button href="/inbox" size="large" variant="contained">
-                  Try Inbox Demo
-                </Button>
-                <Button href="#features" size="large" variant="outlined">
-                  See Features
-                </Button>
-              </Stack>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper elevation={3} sx={{ p: 3, borderRadius: 4 }}>
-                <img
-                  src="/hero-mock.png"
-                  alt="Timer preview"
-                  style={{ width: "100%", borderRadius: 16 }}
-                />
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+      <main className={styles.main}>
+        <section className={styles.hero}>
+          <div className={styles.container}>
+            <div className={styles.heroInner}>
+              <div className={styles.heroCopy}>
+                <span className={styles.tagline}>Inbox triage made visual</span>
+                <h1 className={styles.headline}>
+                  Beat your inbox with{" "}
+                  <span className={styles.highlight}>color-coded</span> timers.
+                </h1>
+                <p className={styles.description}>
+                  MailTickr starts a countdown on each new email and gently
+                  nudges you: green to yellow to red. For brains that love
+                  visual cues.
+                </p>
+                <div className={styles.ctaRow}>
+                  <Button
+                    href="/inbox"
+                    size="large"
+                    variant="contained"
+                    className={styles.buttonPrimary}
+                  >
+                    Try Inbox Demo
+                  </Button>
+                  <Button
+                    href="#features"
+                    size="large"
+                    variant="outlined"
+                    className={styles.buttonSecondary}
+                  >
+                    See Features
+                  </Button>
+                </div>
+              </div>
+              <div className={styles.heroMedia}>
+                <div className={styles.heroFrame}>
+                  <HeroTimer ttlHours={24} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* Features */}
-      <Container id="features" maxWidth="lg" sx={{ py: 10 }}>
-        <Grid container spacing={3}>
-          {[
-            {
-              icon: <AccessTimeIcon />,
-              title: "Live countdowns",
-              text: "Each email gets its own ticking timer based on your preset (24/48/72/custom).",
-            },
-            {
-              icon: <ColorLensIcon />,
-              title: "Color clarity",
-              text: "Green to yellow to red—your brain always knows what to tackle first.",
-            },
-            {
-              icon: <CheckCircleIcon />,
-              title: "Gentle nudges",
-              text: "Optional sounds/haptics and push reminders before time runs out.",
-            },
-          ].map((f, i) => (
-            <Grid item xs={12} md={4} key={i}>
-              <Paper
-                elevation={1}
-                sx={{ p: 3, height: "100%", borderRadius: 4 }}
-              >
-                <Stack spacing={2}>
-                  <Box sx={{ fontSize: 28 }}>{f.icon}</Box>
-                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                    {f.title}
-                  </Typography>
-                  <Typography color="text.secondary">{f.text}</Typography>
-                </Stack>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+        <section id="features" className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.featuresHeader}>
+              <h2>Why it works</h2>
+              <p>
+                Urgency stays visible without feeling frantic. Your next move is
+                always obvious.
+              </p>
+            </div>
+            <div className={styles.featuresGrid}>
+              {FEATURES.map(({ icon: Icon, title, text }) => (
+                <div key={title} className={styles.featureCard}>
+                  <span className={styles.featureIcon}>
+                    <Icon fontSize="small" />
+                  </span>
+                  <h3 className={styles.featureTitle}>{title}</h3>
+                  <p className={styles.featureText}>{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      {/* CTA */}
-      <Box id="get-started" sx={{ py: 10, backgroundColor: "#fff" }}>
-        <Container maxWidth="md" sx={{ textAlign: "center" }}>
-          <Typography variant="h4" sx={{ fontWeight: 800 }}>
-            Ready to see your emails differently?
-          </Typography>
-          <Typography sx={{ mt: 1, color: "text.secondary" }}>
-            Connect Outlook (Gmail soon) and let the timers guide your day.
-          </Typography>
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="center"
-            sx={{ mt: 4 }}
-          >
-            <Button variant="contained" href="/inbox">
-              Open Inbox Demo
-            </Button>
-            <Button variant="outlined">Join Beta</Button>
-          </Stack>
-        </Container>
-      </Box>
+        <section id="get-started" className={styles.ctaSection}>
+          <div className={styles.container}>
+            <h2>Ready to see your emails differently?</h2>
+            <p>
+              Connect Outlook (Gmail soon) and let the timers guide your day.
+            </p>
+            <div className={styles.ctaButtons}>
+              <Button
+                href="/inbox"
+                variant="contained"
+                size="large"
+                className={styles.buttonPrimary}
+              >
+                Open Inbox Demo
+              </Button>
+              <Button
+                href="#"
+                variant="outlined"
+                size="large"
+                className={styles.buttonSecondary}
+              >
+                Join Beta
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
     </>
   );
 }

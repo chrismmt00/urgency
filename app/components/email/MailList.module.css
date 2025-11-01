@@ -1,34 +1,26 @@
-.pane {
-  width: 100%;
-  background: transparent;
-  padding-left: 0; /* <-- hard zero */
-}
-@media (min-width: 960px) {
-  .pane {
-    width: 520px;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
-  }
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
-/* bulk actions row – no left padding */
 .bulk {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 8px 4px 0; /* left = 0 */
+  padding: 6px 8px;
 }
 
-/* scrolling list – no inner padding */
-.listScroll {
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding-left: 0; /* <-- hard zero */
-  height: calc(100vh - 64px - 40px);
 }
 
-/* remove any default paddings coming from MUI list items/buttons */
-.listRoot :global(.MuiListItem-root) {
-  padding-left: 0;
+.empty {
+  padding: 16px;
+  color: var(--text-secondary);
 }
-.listRoot :global(.MuiListItemButton-root) {
-  padding-left: 0 !important;
-}
+
+/* trim default paddings */

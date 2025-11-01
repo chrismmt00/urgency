@@ -1,7 +1,8 @@
 "use client";
-import { Avatar, Button, Paper, Stack, Typography } from "@mui/material";
-import { useMail } from "./MailProvider";
+
+import { Avatar, Button, Divider, Paper, Typography } from "@mui/material";
 import TimerChip from "@/app/components/TimerChip";
+import { useMail } from "./MailProvider";
 import styles from "./MailReader.module.css";
 
 export default function MailReader() {
@@ -12,38 +13,51 @@ export default function MailReader() {
     return <div className={styles.empty}>Select a message to read</div>;
   }
 
+  const received = new Date(mail.receivedISO).toLocaleString();
+
   return (
     <div className={styles.container}>
       <div className={styles.inner}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        {/* Subject */}
+        <Typography variant="h5" className={styles.subject}>
           {mail.subject}
         </Typography>
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap={1}
-          sx={{ marginTop: 8, marginBottom: 16 }}
-        >
-          <Avatar sx={{ width: 28, height: 28 }}>{mail.fromName[0]}</Avatar>
-          <Typography>{mail.fromName}</Typography>
-          <Typography color="text.secondary">
-            &lt;{mail.fromEmail}&gt;
-          </Typography>
-          <TimerChip receivedISO={mail.receivedISO} ttlHours={mail.ttl} />
-        </Stack>
+        {/* Meta row */}
+        <div className={styles.metaRow}>
+          <div className={styles.fromBlock}>
+            <Avatar className={styles.avatar}>
+              {mail.fromName?.[0] || "?"}
+            </Avatar>
+            <div className={styles.fromText}>
+              <div className={styles.fromLine}>
+                <span className={styles.fromName}>{mail.fromName}</span>
+                <span className={styles.fromEmail}>
+                  &lt;{mail.fromEmail}&gt;
+                </span>
+              </div>
+              <div className={styles.date}>{received}</div>
+            </div>
+          </div>
 
-        <Paper
-          variant="outlined"
-          sx={{ padding: 16, whiteSpace: "pre-wrap", borderRadius: 8 }}
-        >
-          {mail.body}
+          <div className={styles.toolsRight}>
+            <TimerChip receivedISO={mail.receivedISO} ttlHours={mail.ttl} />
+          </div>
+        </div>
+
+        <Divider className={styles.divider} />
+
+        {/* Message body */}
+        <Paper variant="outlined" className={styles.message}>
+          {/* If you later store HTML, you can switch to dangerouslySetInnerHTML safely */}
+          <Typography className={styles.bodyText}>{mail.body}</Typography>
         </Paper>
 
-        <Stack direction="row" spacing={1} sx={{ marginTop: 16 }}>
+        {/* Actions */}
+        <div className={styles.actions}>
           <Button variant="contained">Reply</Button>
           <Button variant="outlined">Forward</Button>
-        </Stack>
+        </div>
       </div>
     </div>
   );

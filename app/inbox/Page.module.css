@@ -1,0 +1,39 @@
+/* Two-column content area that lives inside .content (from layout) */
+.row {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden; /* let inner panes manage their own scroll */
+}
+
+/* Fixed list column on desktop */
+.listCol {
+  flex: 0 0 520px;
+  max-width: 520px;
+  min-width: 0;
+  border-right: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  background: var(--surface);
+  display: flex;
+  overflow: hidden;
+}
+
+/* Reader takes remaining */
+.readerCol {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+  background: var(--surface-subtle);
+}
+
+/* Mobile: show one pane at a time */
+/* Previously you likely had overflow: hidden here */
+.single {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  overflow: hidden; /* let MailList/MailReader scroll internally */
+  height: 100%;
+  min-height: 0; /* ensure inner scrollers can size correctly */
+  background: var(--surface);
+}

@@ -1,0 +1,76 @@
+/* Header is on top, in normal flow */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  flex: 0 0 auto;
+  width: 100%;
+  /* a solid bg so it covers content while sticky */
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Main row always sits BELOW the header */
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  /* Fill the viewport minus the sticky header (64px) */
+  height: calc(100dvh - 64px);
+  width: 100%;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex; /* ensure children like .row can size to full height */
+  flex-direction: column;
+  min-height: 0; /* allow inner flex children to shrink for scroll */
+  contain: content; /* prevent accidental overlap/paint issues on mobile */
+}
+/* Desktop sidebar: part of the main row, no overlay */
+.sidebar {
+  /* desktop defaults */
+  position: static; /* <= important */
+  flex: 0 0 240px;
+  min-width: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* Mobile: sidebar is an overlay BELOW the header */
+@media (max-width: 959px) {
+  .sidebar {
+    position: absolute;
+    inset: 64px 0 0 0; /* starts under sticky topbar */
+    pointer-events: none;
+    border-right: none;
+  }
+  .sidebarPanel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -260px;
+    width: 240px;
+    background: var(--surface);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: left 0.25s ease;
+    pointer-events: auto;
+  }
+  .sidebarOpen .sidebarPanel {
+    left: 0;
+  }
+
+  .sidebarBackdrop {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .sidebarOpen .sidebarBackdrop {
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 1;
+  }
+}
