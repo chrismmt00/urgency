@@ -1,6 +1,7 @@
 import "./globals.css";
 import ThemeScript from "./ThemeScript";
 import ThemeRegistry from "./ThemeRegistry";
+import { Suspense } from "react";
 import ColorModeProvider from "./providers/ColorModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import AppClientRoot from "./components/AppClientRoot";
@@ -21,14 +22,14 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <ThemeScript />
-      </head>
+      <head><ThemeScript /></head>
       <body>
         <ThemeRegistry>
           <ColorModeProvider>
             <AuthProvider>
-              <AppClientRoot>{children}</AppClientRoot>
+              <Suspense fallback={null}>
+                <AppClientRoot>{children}</AppClientRoot>
+              </Suspense>
             </AuthProvider>
           </ColorModeProvider>
         </ThemeRegistry>
