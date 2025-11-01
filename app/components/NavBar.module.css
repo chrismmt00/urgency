@@ -98,6 +98,23 @@
   font-weight: 600 !important;
 }
 
+.signInBtn {
+  font-weight: 600 !important;
+  color: var(--topbar-fg) !important;
+}
+.signInBtn:hover,
+.signInBtn:focus-visible {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.loadingWrap {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 900px) {
   .inner {
     width: 100%;
@@ -118,12 +135,22 @@
     display: none !important;
   }
 
-  .actions {
-    gap: 10px;
-  }
-
   .iconBtn {
     width: 32px;
     height: 32px;
+  }
+
+  .signInBtn {
+    padding: 0 10px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .actions {
+    gap: 8px;
+  }
+
+  .signInBtn {
+    display: none !important;
   }
 }

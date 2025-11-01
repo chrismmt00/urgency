@@ -1,6 +1,7 @@
 "use client";
 import {
   Badge,
+  Button,
   Chip,
   Divider,
   Drawer,
@@ -29,7 +30,14 @@ const FOLDERS = [
 ];
 
 export default function Sidebar({ mobileOpen, onClose }) {
-  const { folder, setFolder, emails, setSelectedIds, setActiveId } = useMail();
+  const {
+    folder,
+    setFolder,
+    emails,
+    setSelectedIds,
+    setActiveId,
+    openComposer,
+  } = useMail();
   const unreadCount = emails.filter(
     (e) => e.folder === "Inbox" && e.unread
   ).length;
@@ -37,6 +45,16 @@ export default function Sidebar({ mobileOpen, onClose }) {
   const content = (
     <div className={styles.wrapper}>
       <Toolbar />
+      <div style={{ padding: 12 }}>
+        <Button
+          fullWidth
+          variant="contained"
+          size="small"
+          onClick={() => openComposer({ mode: "new", initialTo: "" })}
+        >
+          Compose
+        </Button>
+      </div>
       <List>
         {FOLDERS.map((f) => (
           <ListItem key={f.key} disablePadding>

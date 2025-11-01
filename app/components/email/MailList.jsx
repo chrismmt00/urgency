@@ -1,6 +1,13 @@
 "use client";
 import { useMemo } from "react";
-import { Checkbox, Divider, IconButton, List, Tooltip } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  IconButton,
+  List,
+  Tooltip,
+} from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import DraftsIcon from "@mui/icons-material/Drafts";
@@ -17,6 +24,9 @@ export default function MailList() {
     setSelectedIds,
     setEmails,
     setActiveId,
+    nextPageToken,
+    loading,
+    loadMore,
   } = useMail();
 
   const filtered = useMemo(() => {
@@ -62,27 +72,33 @@ export default function MailList() {
           onChange={(e) => toggleAll(e.target.checked)}
         />
         <Tooltip title="Mark as read">
-          <IconButton
-            size="small"
-            disabled={selectedIds.size === 0}
-            onClick={markRead}
-          >
-            <DraftsIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton
+              size="small"
+              disabled={selectedIds.size === 0}
+              onClick={markRead}
+            >
+              <DraftsIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Archive">
-          <IconButton size="small" disabled={selectedIds.size === 0}>
-            <ArchiveIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton size="small" disabled={selectedIds.size === 0}>
+              <ArchiveIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton
-            size="small"
-            disabled={selectedIds.size === 0}
-            onClick={remove}
-          >
-            <DeleteOutlineIcon fontSize="small" />
-          </IconButton>
+          <span>
+            <IconButton
+              size="small"
+              disabled={selectedIds.size === 0}
+              onClick={remove}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
       </div>
 
@@ -94,6 +110,15 @@ export default function MailList() {
         ))}
         {filtered.length === 0 && (
           <div className={styles.empty}>No messages</div>
+        )}
+        {nextPageToken && (
+          <div
+            style={{ display: "flex", justifyContent: "center", padding: 8 }}
+          >
+            <Button size="small" onClick={loadMore} disabled={loading}>
+              {loading ? "Loading..." : "Load more"}
+            </Button>
+          </div>
         )}
       </List>
     </div>

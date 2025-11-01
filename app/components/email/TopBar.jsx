@@ -14,6 +14,7 @@ import { useMail } from "./MailProvider";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useColorMode } from "@/app/providers/ColorModeProvider";
+import UserMenu from "@/app/components/UserMenu";
 
 const DRAWER_WIDTH = 240;
 const LIST_WIDTH = 520;
@@ -108,7 +109,7 @@ export default function TopBar({ onOpenSidebar }) {
             <LightModeOutlinedIcon />
           )}
         </button>
-        <div className={styles.avatar}>CG</div>
+        <UserMenu />
       </div>
     </div>
   );
