@@ -5,7 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMail } from "@/app/components/email/MailProvider";
 import MailList from "@/app/components/email/MailList";
 import MailReader from "@/app/components/email/MailReader";
-import styles from "./page.module.css";
+import styles from "./Page.module.css";
 
 export default function InboxPage() {
   const theme = useTheme();
