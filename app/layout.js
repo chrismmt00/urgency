@@ -1,6 +1,9 @@
 import "./globals.css";
 import ThemeScript from "./ThemeScript";
+import ThemeRegistry from "./ThemeRegistry";
 import ColorModeProvider from "./providers/ColorModeProvider";
+import { AuthProvider } from "./providers/AuthProvider";
+import AppClientRoot from "./components/AppClientRoot";
 
 export const metadata = {
   title: "Urgency",
@@ -19,10 +22,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ThemeScript /> {/* sets data-theme before paint */}
+        <ThemeScript />
       </head>
       <body>
-        <ColorModeProvider>{children}</ColorModeProvider>
+        <ThemeRegistry>
+          <ColorModeProvider>
+            <AuthProvider>
+              <AppClientRoot>{children}</AppClientRoot>
+            </AuthProvider>
+          </ColorModeProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

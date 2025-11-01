@@ -39,7 +39,7 @@
   --surface: #1e1f22;
   --border: rgba(255, 255, 255, 0.14);
 
-  --topbar-bg: var(--surface);
+  --topbar-bg: var(--background);
   --topbar-fg: var(--foreground);
   --search-bg: rgba(255, 255, 255, 0.1);
   --search-border: rgba(255, 255, 255, 0.18);

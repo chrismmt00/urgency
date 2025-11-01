@@ -1,0 +1,157 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.container {
+  width: min(960px, 100% - 48px);
+  margin: 0 auto;
+}
+
+.hero {
+  padding: 120px 0 80px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.heroContent {
+  display: grid;
+  gap: 20px;
+  max-width: 640px;
+}
+
+.badge {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(75, 158, 255, 0.12);
+  color: var(--brand-accent);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 3vw + 1.2rem, 3.4rem);
+  font-weight: 800;
+}
+
+.hero p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.primaryBtn {
+  padding: 0 32px !important;
+  font-weight: 600 !important;
+}
+
+.secondaryBtn {
+  padding: 0 32px !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+  font-weight: 600 !important;
+}
+
+.secondaryBtn:hover,
+.secondaryBtn:focus-visible {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.note {
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+.plans {
+  padding: 96px 0 120px;
+}
+
+.planCard {
+  background: var(--surface);
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  box-shadow: 0 28px 60px rgba(15, 23, 42, 0.16);
+  padding: 40px 36px;
+  display: grid;
+  gap: 28px;
+}
+
+.planHeader {
+  display: grid;
+  gap: 12px;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.amount {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.term {
+  font-size: 1rem;
+  opacity: 0.65;
+}
+
+.planList {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  font-size: 0.96rem;
+}
+
+.planList li {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.planList svg {
+  color: var(--brand-accent);
+}
+
+.disclaimer {
+  font-size: 0.85rem;
+  opacity: 0.65;
+}
+
+@media (max-width: 720px) {
+  .container {
+    width: min(100%, calc(100% - 32px));
+  }
+
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+  }
+}
+
+:global(:root[data-theme="dark"]) .secondaryBtn:hover,
+:global(:root[data-theme="dark"]) .secondaryBtn:focus-visible {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global(:root[data-theme="dark"]) .planCard {
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.6);
+}

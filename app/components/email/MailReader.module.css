@@ -120,10 +120,62 @@
   flex: 0 0 auto;
 }
 
-.bodyText {
-  white-space: pre-wrap;
-  text-align: left;
+/* Rich HTML and plain text body containers */
+.htmlBody,
+.plainBody {
+  background: var(--surface-subtle, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  /* Allow vertical scroll inside very large bodies, hide horizontal overflow */
+  overflow-y: auto;
+  overflow-x: hidden;
   color: var(--foreground);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.htmlBody img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 12px 0;
+}
+
+.htmlBody table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.htmlBody th,
+.htmlBody td {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  padding: 6px 8px;
+}
+
+.plainBody {
+  white-space: pre-wrap;
+  font-family: var(
+    --font-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace
+  );
+  border-style: dashed;
+  border-color: var(--border);
+}
+
+.emptyBody {
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
 }
 
 .actions {
@@ -145,5 +197,24 @@
   .inner {
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* Dark theme adjustment */
+:global(:root[data-theme="dark"]) .htmlBody,
+:global(:root[data-theme="dark"]) .plainBody {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Mobile refinements */
+@media (max-width: 640px) {
+  .htmlBody,
+  .plainBody {
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+  .htmlBody img {
+    margin: 8px 0;
   }
 }

@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import NavBar from "./components/NavBar";
 import styles from "./page.module.css";
 import HeroTimer from "./components/HeroTimer";
 
@@ -28,7 +27,6 @@ const FEATURES = [
 export default function Home() {
   return (
     <>
-      <NavBar />
       <main className={styles.main}>
         <section className={styles.hero}>
           <div className={styles.container}>

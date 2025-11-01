@@ -1,0 +1,29 @@
+.main {
+  min-height: 70vh;
+  padding: 160px 24px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.title {
+  font-size: clamp(2rem, 1vw + 1.8rem, 2.6rem);
+  font-weight: 800;
+}
+
+.subtitle {
+  max-width: 520px;
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.72;
+}
+
+.primaryBtn {
+  padding: 0 32px !important;
+  font-weight: 600 !important;
+}
