@@ -55,7 +55,7 @@ export async function GET(req) {
 
     const intent = (state.split(":")[1] || "connect").toLowerCase();
 
-    const tokenData = await exchangeCodeForTokens({ code });
+    const tokenData = await exchangeCodeForTokens({ code, origin: url.origin });
 
     // get profile
     const profRes = await fetch(

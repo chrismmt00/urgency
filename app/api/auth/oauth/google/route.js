@@ -36,7 +36,7 @@ export async function GET(req) {
   const key = getStateKey();
   const sig = createHmac("sha256", key).update(state).digest("hex");
 
-  const authUrl = buildGoogleAuthUrl({ state });
+  const authUrl = buildGoogleAuthUrl({ state, origin: reqUrl.origin });
   const res = NextResponse.redirect(authUrl);
   const isProd = process.env.NODE_ENV === "production";
   res.cookies.set("google_oauth_state", state, {
