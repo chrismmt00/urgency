@@ -29,24 +29,13 @@ export default function UserMenu() {
 
   if (!user) {
     return (
-      <div style={{ display: "flex", gap: 8 }}>
-        <button
-          type="button"
-          className={styles.signInBtn}
-          onClick={() => openAuthModal("signin")}
-        >
-          Sign in
-        </button>
-        <button
-          type="button"
-          className={styles.signInBtn}
-          onClick={() => {
-            window.location.href = "/api/auth/oauth/google?intent=login";
-          }}
-        >
-          Sign in with Google
-        </button>
-      </div>
+      <button
+        type="button"
+        className={styles.signInBtn}
+        onClick={() => openAuthModal("signin")}
+      >
+        Sign in
+      </button>
     );
   }
 
