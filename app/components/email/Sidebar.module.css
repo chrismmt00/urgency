@@ -1,6 +1,43 @@
 .wrapper {
   padding: 8px;
 }
+.accountBar {
+  padding: 12px;
+  background: var(--mui-palette-background-paper);
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+.accountBtn {
+  text-transform: none;
+  border-color: var(--mui-palette-divider);
+  background: var(--mui-palette-background-default);
+}
+.accountBtnInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: space-between;
+}
+.accountBtnLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.accountEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.accountIconCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mui-palette-action-hover);
+  color: var(--mui-palette-text-secondary);
+}
 .sep {
   margin: 8px 0;
 }
@@ -15,4 +52,37 @@
 }
 .css-3vkyn2-MuiDrawer-docked {
   width: auto !important;
+}
+
+/* Improve folder list hover/selected visuals using MUI variables */
+.wrapper :global(.MuiListItemButton-root) {
+  border-radius: 8px;
+  margin: 2px 6px;
+}
+.wrapper :global(.MuiListItemButton-root:hover) {
+  background: var(--mui-palette-action-hover);
+}
+.wrapper :global(.Mui-selected) {
+  background: color-mix(
+    in oklab,
+    var(--mui-palette-primary-main) 14%,
+    transparent
+  ) !important;
+}
+.wrapper :global(.Mui-selected:hover) {
+  background: color-mix(
+    in oklab,
+    var(--mui-palette-primary-main) 18%,
+    transparent
+  ) !important;
+}
+
+/* Responsive: stack elements on narrow screens */
+@media (max-width: 600px) {
+  .accountBtnInner {
+    gap: 6px;
+  }
+  .accountEmail {
+    font-size: 0.875rem;
+  }
 }

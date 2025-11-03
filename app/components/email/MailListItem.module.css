@@ -3,9 +3,9 @@
   display: grid;
   grid-template-columns: 36px 28px 1fr auto;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 0px 10px;
+  padding: 2px 12px;
 }
 
 .checkbox {
@@ -24,13 +24,13 @@
   min-width: 0; /* allow text to truncate */
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .subjectLine {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 

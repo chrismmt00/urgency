@@ -9,7 +9,7 @@
   height: 100%;
   min-height: 0; /* allow inner to shrink */
   overflow-y: auto; /* MailReader scrolls, not the whole page */
-  background: var(--surface-subtle, var(--surface));
+  background: var(--mui-palette-background-default);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -33,7 +33,7 @@
   max-width: 920px;
   margin: 0 auto;
   padding: 20px 20px 32px;
-  color: var(--foreground);
+  color: var(--mui-palette-text-primary);
 }
 
 .subject {
@@ -74,13 +74,13 @@
   font-weight: 600;
 }
 .fromEmail {
-  color: var(--text-secondary);
+  color: var(--mui-palette-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .date {
-  color: var(--text-secondary);
+  color: var(--mui-palette-text-secondary);
   font-size: 0.85rem;
 }
 
@@ -104,12 +104,12 @@
 
 .divider {
   margin: 12px 0 16px;
-  border-color: var(--border);
+  border-color: var(--mui-palette-divider);
 }
 
 .message {
-  background: var(--surface);
-  border: 1px solid var(--border) !important;
+  background: var(--mui-palette-background-paper);
+  border: 1px solid var(--mui-palette-divider) !important;
   border-radius: 12px !important;
   padding: 16px 20px !important;
   line-height: 1.6;
@@ -123,14 +123,14 @@
 /* Rich HTML and plain text body containers */
 .htmlBody,
 .plainBody {
-  background: var(--surface-subtle, rgba(0, 0, 0, 0.02));
-  border: 1px solid var(--border);
+  background: var(--mui-palette-background-default);
+  border: 1px solid var(--mui-palette-divider);
   border-radius: 10px;
   padding: 12px 14px;
   /* Allow vertical scroll inside very large bodies, hide horizontal overflow */
   overflow-y: auto;
   overflow-x: hidden;
-  color: var(--foreground);
+  color: var(--mui-palette-text-primary);
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -169,11 +169,11 @@
     monospace
   );
   border-style: dashed;
-  border-color: var(--border);
+  border-color: var(--mui-palette-divider);
 }
 
 .emptyBody {
-  color: var(--text-secondary);
+  color: var(--mui-palette-text-secondary);
   font-style: italic;
   text-align: center;
 }
@@ -190,7 +190,7 @@
   width: 100%;
   min-width: 0;
   padding: 24px;
-  color: var(--text-secondary);
+  color: var(--mui-palette-text-secondary);
 }
 
 @media (max-width: 600px) {
@@ -201,10 +201,29 @@
 }
 
 /* Dark theme adjustment */
-:global(:root[data-theme="dark"]) .htmlBody,
-:global(:root[data-theme="dark"]) .plainBody {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.18);
+/* Rely on MUI CSS variables for light/dark; no explicit overrides needed */
+
+/* Attachments styling */
+.attachments {
+  margin-top: 12px;
+}
+.attachmentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.attachmentItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mui-palette-text-secondary);
+}
+.attachmentName {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Mobile refinements */

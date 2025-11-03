@@ -15,15 +15,11 @@ const FORM_DEFAULTS = {
   email: "",
   password: "",
   displayName: "",
+  confirmPassword: "",
 };
 
 export default function AuthModal() {
-  const {
-    authModalOpen,
-    authModalMode,
-    closeAuthModal,
-    setUser,
-  } = useAuth();
+  const { authModalOpen, authModalMode, closeAuthModal, setUser } = useAuth();
   const router = useRouter();
   const [formState, setFormState] = useState(FORM_DEFAULTS);
   const [mode, setMode] = useState(authModalMode);
@@ -64,6 +60,11 @@ export default function AuthModal() {
     startTransition(async () => {
       try {
         if (mode === "signup") {
+          // Validate confirm password before sending request
+          if (formState.password !== formState.confirmPassword) {
+            setError("Passwords do not match. Please confirm your password.");
+            return;
+          }
           const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -218,6 +219,18 @@ export default function AuthModal() {
               size="small"
               required
             />
+            {mode === "signup" && (
+              <TextField
+                label="Confirm password"
+                name="confirmPassword"
+                type="password"
+                value={formState.confirmPassword}
+                onChange={handleChange}
+                fullWidth
+                size="small"
+                required
+              />
+            )}
             {error && <p className={styles.error}>{error}</p>}
             {message && <p className={styles.message}>{message}</p>}
             <Button

@@ -22,7 +22,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head><ThemeScript /></head>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
         <ThemeRegistry>
           <ColorModeProvider>

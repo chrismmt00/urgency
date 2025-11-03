@@ -1,13 +1,29 @@
 "use client";
 
-import { Avatar, Button, Divider, Paper, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
+import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import TimerChip from "@/app/components/TimerChip";
 import { useMail } from "./MailProvider";
 import DOMPurify from "dompurify";
 import styles from "./MailReader.module.css";
 
 export default function MailReader() {
-  const { emails, activeId, openComposer } = useMail();
+  const {
+    emails,
+    activeId,
+    openComposer,
+    accounts,
+    activeAccountId,
+    activeFolder,
+    folder,
+  } = useMail();
   const mail = emails.find((e) => e.id === activeId);
 
   if (!mail) {
@@ -57,7 +73,54 @@ export default function MailReader() {
           </div>
 
           <div className={styles.toolsRight}>
-            <TimerChip receivedISO={mail.receivedISO} ttlHours={mail.ttl} />
+            <div
+              style={{
+                display: "flex",
+                gap: 6,
+                alignItems: "center",
+                marginRight: 8,
+              }}
+            >
+              {(() => {
+                const acct = (accounts || []).find(
+                  (a) => a.id === activeAccountId
+                );
+                const folderLabel =
+                  activeFolder === "primary"
+                    ? "Primary"
+                    : activeFolder === "sent"
+                    ? "Sent"
+                    : activeFolder === "spam"
+                    ? "Spam"
+                    : activeFolder === "all"
+                    ? "All Mail"
+                    : folder;
+                return (
+                  <>
+                    <Chip size="small" label={acct?.email || ""} />
+                    <Chip size="small" variant="outlined" label={folderLabel} />
+                  </>
+                );
+              })()}
+            </div>
+            <TimerChip
+              receivedISO={mail.receivedISO}
+              ttlHours={mail.ttl}
+              timerDueAt={mail.timer_due_at}
+              allowOverdue={mail.allow_overdue}
+              status={mail.timer_status}
+              overdueLimitHours={mail.overdue_limit_hours}
+              onMarkDone={async () => {
+                try {
+                  await fetch(`/api/mail/messages/${mail.id}/resolve`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ accountId: activeAccountId }),
+                  });
+                } catch {}
+              }}
+            />
           </div>
         </div>
 
@@ -95,11 +158,16 @@ export default function MailReader() {
         </Paper>
 
         {Array.isArray(mail.attachments) && mail.attachments.length > 0 && (
-          <div className={styles.actions}>
-            <Typography variant="subtitle2">Attachments</Typography>
-            <ul>
+          <div className={styles.attachments}>
+            <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+              Attachments
+            </Typography>
+            <ul className={styles.attachmentList}>
               {mail.attachments.map((a) => (
-                <li key={a.attachmentId}>{a.filename}</li>
+                <li key={a.attachmentId} className={styles.attachmentItem}>
+                  <AttachFileOutlinedIcon fontSize="small" />
+                  <span className={styles.attachmentName}>{a.filename}</span>
+                </li>
               ))}
             </ul>
           </div>

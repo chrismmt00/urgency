@@ -3,52 +3,52 @@
   --list-width: 520px;
 }
 
-/* ========== Color tokens (light default) ========== */
+/* Color tokens (light default) */
 :root {
-  /* App-wide base */
-  --background: #dadada;
-  --foreground: #171717;
+  /* Prefer MUI CSS variables when available; fallback to static values */
+  --background: var(--mui-palette-background-default, #dadada);
+  --foreground: var(--mui-palette-text-primary, #171717);
 
   /* Surfaces / borders */
-  --surface: #ffffff;
-  --border: rgba(0, 0, 0, 0.12);
+  --surface: var(--mui-palette-background-paper, #ffffff);
+  --border: var(--mui-palette-divider, rgba(0, 0, 0, 0.12));
 
   /* Top bar + search */
   --topbar-bg: var(--surface);
   --topbar-fg: var(--foreground);
-  --search-bg: rgba(0, 0, 0, 0.06);
-  --search-border: rgba(0, 0, 0, 0.08);
+  --search-bg: color-mix(in oklab, var(--foreground) 6%, transparent);
+  --search-border: color-mix(in oklab, var(--foreground) 8%, transparent);
 
   /* Brand accent */
-  --brand-accent: #4b9eff;
+  --brand-accent: var(--mui-palette-primary-main, #4b9eff);
 
   /* Success/Warning/Error chips (optional) */
-  --chip-success: #4caf50;
-  --chip-warning: #ffc107;
-  --chip-error: #d84c4c;
+  --chip-success: var(--mui-palette-success-main, #4caf50);
+  --chip-warning: var(--mui-palette-warning-main, #ffc107);
+  --chip-error: var(--mui-palette-error-main, #d84c4c);
 }
 
 /* ========== Dark theme override when toggled ==========
    TopBar sets: document.documentElement.setAttribute('data-theme','dark')
-   This takes precedence over prefers-color-scheme.
-========================================================= */
+   This takes precedence over prefers-color-scheme.*/
 :root[data-theme="dark"] {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* When explicit dark is set, keep using MUI variables if present */
+  --background: var(--mui-palette-background-default, #0a0a0a);
+  --foreground: var(--mui-palette-text-primary, #ededed);
 
-  --surface: #1e1f22;
-  --border: rgba(255, 255, 255, 0.14);
+  --surface: var(--mui-palette-background-paper, #1e1f22);
+  --border: var(--mui-palette-divider, rgba(255, 255, 255, 0.14));
 
-  --topbar-bg: var(--background);
+  --topbar-bg: var(--surface);
   --topbar-fg: var(--foreground);
-  --search-bg: rgba(255, 255, 255, 0.1);
-  --search-border: rgba(255, 255, 255, 0.18);
+  --search-bg: color-mix(in oklab, var(--foreground) 10%, transparent);
+  --search-border: color-mix(in oklab, var(--foreground) 18%, transparent);
 
-  --brand-accent: #82b6ff;
+  --brand-accent: var(--mui-palette-primary-main, #82b6ff);
 
-  --chip-success: #7bd389;
-  --chip-warning: #ffd666;
-  --chip-error: #ff7b7b;
+  --chip-success: var(--mui-palette-success-main, #7bd389);
+  --chip-warning: var(--mui-palette-warning-main, #ffd666);
+  --chip-error: var(--mui-palette-error-main, #ff7b7b);
 }
 
 /* ========== System preference default ==========
@@ -56,22 +56,22 @@
    (No [data-theme] attribute present.) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--mui-palette-background-default, #0a0a0a);
+    --foreground: var(--mui-palette-text-primary, #ededed);
 
-    --surface: #1e1f22;
-    --border: rgba(255, 255, 255, 0.14);
+    --surface: var(--mui-palette-background-paper, #1e1f22);
+    --border: var(--mui-palette-divider, rgba(255, 255, 255, 0.14));
 
     --topbar-bg: var(--surface);
     --topbar-fg: var(--foreground);
-    --search-bg: rgba(255, 255, 255, 0.1);
-    --search-border: rgba(255, 255, 255, 0.18);
+    --search-bg: color-mix(in oklab, var(--foreground) 10%, transparent);
+    --search-border: color-mix(in oklab, var(--foreground) 18%, transparent);
 
-    --brand-accent: #82b6ff;
+    --brand-accent: var(--mui-palette-primary-main, #82b6ff);
 
-    --chip-success: #7bd389;
-    --chip-warning: #ffd666;
-    --chip-error: #ff7b7b;
+    --chip-success: var(--mui-palette-success-main, #7bd389);
+    --chip-warning: var(--mui-palette-warning-main, #ffd666);
+    --chip-error: var(--mui-palette-error-main, #ff7b7b);
   }
 }
 
@@ -83,8 +83,8 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--mui-palette-text-primary, var(--foreground));
+  background: var(--mui-palette-background-default, var(--background));
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

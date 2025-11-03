@@ -22,6 +22,26 @@ function ComposerHost() {
 export default function InboxShell({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  function SidebarWithContext(props) {
+    const {
+      accounts,
+      activeAccountId,
+      setActiveAccountId,
+      activeFolder,
+      setActiveFolder,
+    } = useMail();
+    return (
+      <Sidebar
+        accounts={accounts}
+        activeAccountId={activeAccountId}
+        onAccountChange={setActiveAccountId}
+        activeFolder={activeFolder}
+        onFolderChange={setActiveFolder}
+        {...props}
+      />
+    );
+  }
+
   return (
     <MailProvider>
       <div className={styles.shell}>
@@ -41,7 +61,7 @@ export default function InboxShell({ children }) {
               onClick={() => setMobileOpen(false)}
             />
             <div className={styles.sidebarPanel}>
-              <Sidebar
+              <SidebarWithContext
                 mobileOpen={mobileOpen}
                 onClose={() => setMobileOpen(false)}
               />

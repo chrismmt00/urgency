@@ -13,7 +13,7 @@ import UserMenu from "./UserMenu";
 
 export default function NavBar() {
   const { mode, toggle } = useColorMode();
-  const { user, loading } = useAuth();
+  const { user, loading, openAuthModal } = useAuth();
   const router = useRouter();
 
   const handleInbox = () => {

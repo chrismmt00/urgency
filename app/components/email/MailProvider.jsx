@@ -1,16 +1,21 @@
 "use client";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { MAIL } from "./mockMail";
 
 const MailCtx = createContext(null);
 export const useMail = () => useContext(MailCtx);
 
 export default function MailProvider({ children }) {
-  const [folder, setFolder] = useState("Inbox");
+  // Connected accounts pulled from server
+  const [accounts, setAccounts] = useState([]);
+  const [activeAccountId, setActiveAccountId] = useState(null);
+  // Folders: important | starred | sent | spam | trash | all
+  const [activeFolder, setActiveFolder] = useState("important");
+
+  const [folder, setFolder] = useState("Inbox"); // legacy field used by UI filtering; kept for compatibility
   const [query, setQuery] = useState("");
-  const [emails, setEmails] = useState(MAIL);
+  const [emails, setEmails] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
-  const [activeId, setActiveId] = useState(MAIL[0]?.id ?? null);
+  const [activeId, setActiveId] = useState(null);
 
   // loading/paging state
   const [loading, setLoading] = useState(false);
@@ -34,6 +39,13 @@ export default function MailProvider({ children }) {
 
   const value = useMemo(
     () => ({
+      // Accounts & folders
+      accounts,
+      activeAccountId,
+      setActiveAccountId,
+      activeFolder,
+      setActiveFolder,
+      // legacy folder for existing components (maps from activeFolder)
       folder,
       setFolder,
       query,
@@ -55,10 +67,13 @@ export default function MailProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
-          const res = await fetch(
-            `/api/mail/messages?pageToken=${encodeURIComponent(nextPageToken)}`,
-            { credentials: "include" }
-          );
+          const params = new URLSearchParams();
+          params.set("pageToken", nextPageToken);
+          if (activeAccountId) params.set("accountId", activeAccountId);
+          if (activeFolder) params.set("folder", activeFolder);
+          const res = await fetch(`/api/mail/messages?${params.toString()}`, {
+            credentials: "include",
+          });
           const data = await res.json();
           if (res.ok && data?.ok) {
             if (Array.isArray(data.messages) && data.messages.length) {
@@ -81,6 +96,9 @@ export default function MailProvider({ children }) {
       closeComposer,
     }),
     [
+      accounts,
+      activeAccountId,
+      activeFolder,
       folder,
       query,
       emails,
@@ -95,13 +113,40 @@ export default function MailProvider({ children }) {
     ]
   );
 
+  // Load connected accounts once and set default active account
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/connections", { credentials: "include" });
+        const data = await res.json().catch(() => []);
+        if (!cancelled && Array.isArray(data)) {
+          setAccounts(data);
+          if (!activeAccountId) {
+            const def = data.find((a) => a.is_default);
+            if (def?.id) setActiveAccountId(def.id);
+            else if (data[0]?.id) setActiveAccountId(data[0].id);
+          }
+        }
+      } catch {
+        // ignore; accounts remain empty
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeAccountId]);
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("/api/mail/messages", {
+        const params = new URLSearchParams();
+        if (activeAccountId) params.set("accountId", activeAccountId);
+        if (activeFolder) params.set("folder", activeFolder);
+        const res = await fetch(`/api/mail/messages?${params.toString()}`, {
           credentials: "include",
         });
         const data = await res.json().catch(() => ({}));
@@ -120,11 +165,36 @@ export default function MailProvider({ children }) {
         if (!cancelled) setLoading(false);
       }
     }
-    load();
+    // Map activeFolder to legacy folder label
+    const legacy =
+      activeFolder === "important"
+        ? "Important"
+        : activeFolder === "starred"
+        ? "Starred"
+        : activeFolder === "primary"
+        ? "Inbox"
+        : activeFolder === "sent"
+        ? "Sent"
+        : activeFolder === "spam"
+        ? "Spam"
+        : activeFolder === "trash"
+        ? "Trash"
+        : activeFolder === "all"
+        ? "All Mail"
+        : "Inbox";
+    setFolder(legacy);
+    setSelectedIds(new Set());
+    setActiveId(null);
+    if (activeAccountId) {
+      load();
+    } else {
+      setEmails([]);
+      setNextPageToken(null);
+    }
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeAccountId, activeFolder]);
 
   return <MailCtx.Provider value={value}>{children}</MailCtx.Provider>;
 }

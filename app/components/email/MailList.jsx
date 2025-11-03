@@ -19,6 +19,9 @@ export default function MailList() {
   const {
     emails,
     folder,
+    accounts,
+    activeAccountId,
+    activeFolder,
     query,
     selectedIds,
     setSelectedIds,
@@ -32,7 +35,7 @@ export default function MailList() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return emails.filter((e) => {
-      const inFolder = e.folder === folder;
+      const inFolder = folder === "All Mail" ? true : e.folder === folder;
       if (!q) return inFolder;
       const hay =
         `${e.subject} ${e.fromName} ${e.fromEmail} ${e.snippet}`.toLowerCase();
@@ -100,6 +103,40 @@ export default function MailList() {
             </IconButton>
           </span>
         </Tooltip>
+      </div>
+
+      {/* Active account + folder indicator */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "4px 8px",
+        }}
+      >
+        <span
+          style={{ color: "var(--mui-palette-text-secondary)", fontSize: 12 }}
+        >
+          {(() => {
+            const acct = (accounts || []).find((a) => a.id === activeAccountId);
+            const folderLabel =
+              activeFolder === "important"
+                ? "Important"
+                : activeFolder === "starred"
+                ? "Starred"
+                : activeFolder === "primary"
+                ? "Inbox"
+                : activeFolder === "sent"
+                ? "Sent"
+                : activeFolder === "spam"
+                ? "Spam"
+                : activeFolder === "trash"
+                ? "Trash"
+                : activeFolder === "all"
+                ? "All Mail"
+                : folder;
+            return `${acct?.email || ""} — ${folderLabel}`;
+          })()}
+        </span>
       </div>
 
       <Divider />

@@ -5,8 +5,11 @@ import { verifyAccessToken } from "@/lib/jwt";
 import {
   getConnectedAccount,
   saveConnectedAccount,
+  getConnectedAccountById,
 } from "@/lib/connected-accounts";
 import { refreshGoogleToken } from "@/lib/google";
+import { loadActiveRulesForUser, pickMatchingRule } from "@/lib/timer-rules";
+import { query } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +58,11 @@ function extractParts(payload) {
 }
 
 export async function GET(req) {
+  const inUrl = new URL(req.url);
+  const accountId = inUrl.searchParams.get("accountId") || "";
+  const folderParam = (
+    inUrl.searchParams.get("folder") || "important"
+  ).toLowerCase();
   const { accessToken } = await readAuthCookies();
   const payload = accessToken && verifyAccessToken(accessToken);
   if (!payload?.sub) {
@@ -64,7 +72,9 @@ export async function GET(req) {
     );
   }
 
-  const acct = await getConnectedAccount(payload.sub, "gmail");
+  const acct = accountId
+    ? await getConnectedAccountById(payload.sub, accountId)
+    : await getConnectedAccount(payload.sub, "gmail");
   if (!acct) {
     return NextResponse.json({ ok: true, messages: [] });
   }
@@ -100,8 +110,37 @@ export async function GET(req) {
     "https://gmail.googleapis.com/gmail/v1/users/me/messages"
   );
   url.searchParams.set("maxResults", "20");
-  url.searchParams.set("q", "in:inbox");
-  const pageToken = new URL(req.url).searchParams.get("pageToken");
+  // Map selected folder to Gmail search query
+  const legacyFolder =
+    folderParam === "important"
+      ? "Important"
+      : folderParam === "starred"
+      ? "Starred"
+      : folderParam === "primary"
+      ? "Inbox"
+      : folderParam === "sent"
+      ? "Sent"
+      : folderParam === "spam"
+      ? "Spam"
+      : folderParam === "trash"
+      ? "Trash"
+      : folderParam === "all"
+      ? "All Mail"
+      : "Inbox";
+  if (folderParam === "important") {
+    url.searchParams.set("q", "is:important");
+  } else if (folderParam === "starred") {
+    url.searchParams.set("q", "is:starred");
+  } else if (folderParam === "primary") {
+    url.searchParams.set("q", "in:inbox");
+  } else if (folderParam === "sent") {
+    url.searchParams.set("q", "in:sent");
+  } else if (folderParam === "spam") {
+    url.searchParams.set("q", "in:spam");
+  } else if (folderParam === "trash") {
+    url.searchParams.set("q", "in:trash");
+  } // else 'all' => no q param
+  const pageToken = inUrl.searchParams.get("pageToken");
   if (pageToken) url.searchParams.set("pageToken", pageToken);
 
   const listRes = await fetch(url.toString(), {
@@ -147,7 +186,8 @@ export async function GET(req) {
       const parts = extractParts(d.payload || {});
       return {
         id: d.id,
-        folder: "Inbox",
+        account_id: acct.id,
+        folder: legacyFolder,
         fromName,
         fromEmail,
         subject: headers["subject"] || "(no subject)",
@@ -158,7 +198,7 @@ export async function GET(req) {
         ttl: 24,
         unread: (d.labelIds || []).includes("UNREAD"),
         starred: (d.labelIds || []).includes("STARRED"),
-        labels: [],
+        labels: Array.isArray(d.labelIds) ? d.labelIds : [],
         plainText: parts.plainText,
         html: parts.html,
         attachments: parts.attachments,
@@ -172,7 +212,55 @@ export async function GET(req) {
     })
   );
 
-  const messages = details.filter(Boolean);
+  let messages = details.filter(Boolean);
+
+  // Apply timer rules (on-the-fly) and overlay any persisted status overrides
+  try {
+    const rules = await loadActiveRulesForUser(payload.sub);
+    messages = messages.map((msg) => {
+      const { rule, dueAt, status } = pickMatchingRule(msg, rules);
+      return {
+        ...msg,
+        timer_rule_id: rule ? rule.id : null,
+        timer_due_at: dueAt ? dueAt.toISOString() : null,
+        timer_status: status || "active",
+        allow_overdue: rule ? !!rule.allow_overdue : true,
+        overdue_limit_hours:
+          rule && Number.isFinite(rule.overdue_limit_hours)
+            ? rule.overdue_limit_hours
+            : 72,
+      };
+    });
+
+    // Overlay persisted resolution state if present
+    if (acct?.id && messages.length) {
+      const msgIds = messages.map((m) => m.id);
+      const { rows: statusRows } = await query(
+        `SELECT provider_msg_id, timer_status, timer_due_at
+           FROM message_status
+          WHERE user_id = $1 AND account_id = $2 AND provider_msg_id = ANY($3)`,
+        [payload.sub, acct.id, msgIds]
+      );
+      if (statusRows.length) {
+        const map = new Map(statusRows.map((r) => [r.provider_msg_id, r]));
+        messages = messages.map((m) => {
+          const s = map.get(m.id);
+          return s
+            ? {
+                ...m,
+                timer_status: s.timer_status || m.timer_status,
+                timer_due_at: s.timer_due_at
+                  ? new Date(s.timer_due_at).toISOString()
+                  : m.timer_due_at,
+              }
+            : m;
+        });
+      }
+    }
+  } catch (e) {
+    console.warn("Timer rules application failed:", e?.message || e);
+  }
+
   return NextResponse.json({
     ok: true,
     messages,

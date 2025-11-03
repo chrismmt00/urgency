@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemButton,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
@@ -22,7 +23,10 @@ export default function MailListItem({ mail }) {
     setActiveId,
     setEmails,
     setMobileView,
+    activeAccountId,
   } = useMail();
+  // TODO: Visual cleanup — keep the layout consistent with theme tokens,
+  // reduce clutter, and consider responsive refinements for smaller screens.
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -53,12 +57,19 @@ export default function MailListItem({ mail }) {
     );
   };
 
+  const ts = new Date(mail.receivedISO).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const labelBadges = [];
+  if ((mail.labels || []).includes("IMPORTANT")) labelBadges.push("Important");
+
   return (
     <ListItem
       disablePadding
       sx={{ bgcolor: activeId === mail.id ? "action.selected" : "transparent" }}
     >
-      <ListItemButton onClick={openMail} sx={{ py: 0.75, pr: 1, pl: 0 }}>
+      <ListItemButton onClick={openMail} sx={{ py: 1, pr: 1.25, pl: 0 }}>
         <div className={styles.row}>
           <div className={styles.checkbox}>
             <Checkbox
@@ -69,7 +80,6 @@ export default function MailListItem({ mail }) {
               size="small"
             />
           </div>
-
           <div className={styles.star} onClick={toggleStar}>
             {mail.starred ? (
               <StarIcon color="warning" fontSize="small" />
@@ -77,23 +87,47 @@ export default function MailListItem({ mail }) {
               <StarBorderIcon fontSize="small" />
             )}
           </div>
-
           <div className={styles.text}>
             <div className={styles.subjectLine}>
               <Typography noWrap sx={{ fontWeight: mail.unread ? 700 : 500 }}>
                 {mail.subject}
               </Typography>
-              {(mail.labels || []).slice(0, 2).map((l) => (
-                <Chip key={l} label={l} size="small" variant="outlined" />
+              {labelBadges.map((l) => (
+                <Tooltip key={l} title={l} placement="top">
+                  <Chip size="small" variant="outlined" label={l} />
+                </Tooltip>
               ))}
             </div>
             <Typography color="text.secondary" noWrap>
-              {mail.fromName} &lt;{mail.fromEmail}&gt; — {mail.snippet}
+              {mail.fromName || mail.fromEmail} — {mail.snippet}
             </Typography>
           </div>
-
           <div className={styles.timer}>
-            <TimerChip receivedISO={mail.receivedISO} ttlHours={mail.ttl} />
+            <span style={{ marginRight: 8, opacity: 0.7 }}>{ts}</span>
+            <TimerChip
+              receivedISO={mail.receivedISO}
+              ttlHours={mail.ttl}
+              timerDueAt={mail.timer_due_at}
+              allowOverdue={mail.allow_overdue}
+              status={mail.timer_status}
+              overdueLimitHours={mail.overdue_limit_hours}
+              onMarkDone={async (e) => {
+                e.stopPropagation();
+                try {
+                  await fetch(`/api/mail/messages/${mail.id}/resolve`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ accountId: activeAccountId }),
+                  });
+                  setEmails((prev) =>
+                    prev.map((m) =>
+                      m.id === mail.id ? { ...m, timer_status: "resolved" } : m
+                    )
+                  );
+                } catch {}
+              }}
+            />
           </div>
         </div>
       </ListItemButton>

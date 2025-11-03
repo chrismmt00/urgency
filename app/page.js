@@ -5,6 +5,8 @@ import ColorLensIcon from "@mui/icons-material/ColorLens";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import styles from "./page.module.css";
 import HeroTimer from "./components/HeroTimer";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { useRouter } from "next/navigation";
 
 const FEATURES = [
   {
@@ -25,6 +27,13 @@ const FEATURES = [
 ];
 
 export default function Home() {
+  const { user, openAuthModal } = useAuth();
+  const router = useRouter();
+
+  const handleHeroPrimary = () => {
+    if (user) router.push("/inbox");
+    else openAuthModal("signup");
+  };
   return (
     <>
       <main className={styles.main}>
@@ -44,7 +53,7 @@ export default function Home() {
                 </p>
                 <div className={styles.ctaRow}>
                   <Button
-                    href="/inbox"
+                    onClick={handleHeroPrimary}
                     size="large"
                     variant="contained"
                     className={styles.buttonPrimary}
